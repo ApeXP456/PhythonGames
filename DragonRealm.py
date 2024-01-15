@@ -68,6 +68,36 @@ def distribute_attributes():
     return attributes["Strength"], attributes["Intelligence"], attributes["Agility"]
 
 # Game Mechanics (Cave Choice and Dragon Encounter)
+
+def encounter(character):
+    while True:
+        print("What would you like to do?")
+        print("1. Move forward")
+        print("2. Check your inventory")
+        print("3. Consult your map")
+        print("4. Exit game")
+        choice = input("Enter your choice (1-4): ")
+
+        if choice == "1":
+            print("You cautiously move forward into the darkness...")
+            # Here you can add more specific game logic for moving forward
+            break  # Break the loop to proceed to next part of the game
+
+        elif choice == "2":
+            print("You check your inventory and see a torch, a sword, and a map.")
+            # Additional logic for inventory management can be added here
+
+        elif choice == "3":
+            print("You consult your map and see that you are currently in the middle of a cave.")
+            # Include more details about the player's location or objectives
+
+        elif choice == "4":
+            print("Thanks for playing! Exiting game...")
+            exit(0)  # Exits the game
+
+        else:
+            print("Invalid input. Please try again.")
+
 def choose_cave():
     cave = ''
     while cave not in ['1', '2']:
@@ -94,13 +124,13 @@ def check_cave(chosen_cave, character):
             print(f"{character.name} has been defeated by the dragon!")
             return False  # Indicates the character has been defeated
         else:
-            print('The dragon raises his right wing in defense of the intruders, reveiling a small door way.You rush past the aggitated dragon toward the doorway managing to escape the dragon, you barely surviving the encounter! .')
-            character.heal(10)
+            print('The dragon raises his right wing in defense of the intruders, reveiling a small door way.You rush past the aggitated dragon toward the doorway, you barely surviving the encounter! ')
+            #character.heal(10)
         # Small health boost after surviving
         return True  # Indicates the character survived
-    
+  
 # More Encounters   
-def next_encounter(character):
+def encounter3(character):
     print("After surviving the dragon, you venture deeper into the cave...")
 # Placeholder for additional encounters or decision points
     choice = input("Do you wish to continue deeper into the cave or head back? (continue/back): ")
@@ -109,10 +139,9 @@ def next_encounter(character):
 # Additional encounters or events here
     else:
         print("You decide to head back, taking the safe route...")
-# Other events or return to the main path
 
     
-# Save funcion      
+# Save and Load Game Functions      
 def save_game(character, filename='savegame.pkl'):
     with open(filename, 'wb') as f:
         pickle.dump(character, f)
@@ -128,6 +157,7 @@ def load_game(filename='savegame.pkl'):
         print("No saved game found.")
         return None
 
+# Main Function
 def main():
     print("Welcome to Dragon's Realm!")
     choice = input("Do you want to load a saved game? (yes/no): ")
@@ -138,20 +168,20 @@ def main():
     else:
         player_character = create_character()
     print(player_character)
-
     play_again = 'yes'
     while play_again.lower() in ['yes', 'y']:
         display_intro()
+        encounter(player_character)
         cave_number = choose_cave()
         survived = check_cave(cave_number, player_character)
         if not survived:
-            print('Game Over. Would you like to try again? (yes/no)')
+            print('Congradulations on finding the Treasure! Would you like to try again? (yes/no)')
             play_again = input()
             if play_again.lower() in ['yes', 'y']:
                 player_character = create_character()  # Create a new character
             continue
 
-        next_encounter(player_character)
+        encounter3(player_character)
 
         save_choice = input("Do you want to save your game? (yes/no): ")
         if save_choice.lower() in ['yes', 'y']:
