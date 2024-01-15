@@ -8,7 +8,61 @@ def displayIntro():
            Before you stand two ancient caves: one adorned with mystical runes, suggesting wisdom and magic within; the other surrounded by ominous bones, signaling danger.
            Will you uncover the secrets of NeverDie and claim the dragons' treasure, or will you fall to the perils that lurk in the shadows? The choice is yours.''')
     # Add code for character customization here
-    
+    class Character:
+    def __init__(self, name, char_class, strength, intelligence, agility):
+        self.name = name
+        self.char_class = char_class
+        self.strength = strength
+        self.intelligence = intelligence
+        self.agility = agility
+
+    def __str__(self):
+        return f"{self.name}, the {self.char_class} - Strength: {self.strength}, Intelligence: {self.intelligence}, Agility: {self.agility}"
+
+
+def create_character():
+    print("Character Creation")
+    name = input("Enter your character's name: ")
+    char_class = choose_class()
+    strength, intelligence, agility = distribute_attributes()
+
+    return Character(name, char_class, strength, intelligence, agility)
+
+
+def choose_class():
+    classes = ["Warrior", "Mage", "Rogue"]
+    print("Choose a class:")
+    for i, char_class in enumerate(classes, 1):
+        print(f"{i}. {char_class}")
+
+    class_choice = 0
+    while class_choice < 1 or class_choice > len(classes):
+        class_choice = int(input("Enter the number of your class: "))
+
+    return classes[class_choice - 1]
+
+
+def distribute_attributes():
+    total_points = 15
+    attributes = {"Strength": 0, "Intelligence": 0, "Agility": 0}
+
+    print("Distribute your attribute points (total: 15):")
+    for attribute in attributes:
+        points = -1
+        while points < 0 or points > total_points:
+            points = int(input(f"Enter points for {attribute} (0-15): "))
+            if points > total_points:
+                print(f"Not enough points. You have {total_points} points left.")
+
+        attributes[attribute] = points
+        total_points -= points
+
+    return attributes["Strength"], attributes["Intelligence"], attributes["Agility"]
+
+# Example usage
+player_character = create_character()
+print(player_character)
+
 # Continue with existing functions...
 def chooseCave():
     cave=''
