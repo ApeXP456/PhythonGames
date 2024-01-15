@@ -4,11 +4,12 @@ import random
 import time
 
 def displayIntro():
-    print('''Your are in a land full of Dragons called NeverDie! Some  dragons are friendly while others are very malicious. In the Land of NeverDie,
-           it is imperitive that you adhere to your goal to never die. Standing on the dry soil, before you stands two caves and you hear a loud snarl coming from one of the caves.
-           In one of the caves is a friendly dragon wating for you, who will share his treasure with you. While the other cave has a hungry and greedy dragon that will eat you on sight.''')
+    print('''Welcome to NeverDie, a mystical land of dragons and adventure. Here, your courage and wit will be tested as you seek the legendary treasure of the dragons.
+           Before you stand two ancient caves: one adorned with mystical runes, suggesting wisdom and magic within; the other surrounded by ominous bones, signaling danger.
+           Will you uncover the secrets of NeverDie and claim the dragons' treasure, or will you fall to the perils that lurk in the shadows? The choice is yours.''')
+    # Add code for character customization here
     
-
+# Continue with existing functions...
 def chooseCave():
     cave=''
     while cave!= '1'  and cave !="2":
@@ -16,7 +17,9 @@ def chooseCave():
         cave=input()
 
     return cave
-
+# New function for enhanced decision making
+def dragonEncounter():
+    # Code for interacting with dragons, making decisions, etc.
 def checkCave(chosenCave):
     print('You start to approach the cave...')
     time.sleep(2)
@@ -32,12 +35,23 @@ def checkCave(chosenCave):
         print('The friendly Dragon greets you warmly and gives you a large chunck of the treasure!')
     else:
         print(' Silence... The Dragon has Gobbled you down in one big bite!')
+# Implement save and load feature
+def saveGame():
+    # Code to save the game state
 
-playagain='yes'
-while playagain == 'yes' or playagain == 'y':
+def loadGame():
+    # Code to load a saved game state
+
+# Main game loop
+while playagain in ['yes', 'y']:
+    # Include character customization at the start
     displayIntro()
-    caveNumber=chooseCave()
+    caveNumber = chooseCave()
     checkCave(caveNumber)
+    # Additional gameplay elements
+    dragonEncounter()
+    # Option to save the game
+    saveGame()
 
     print('Do you want to play again? Yes or no?')
-    playagain=input()
+    playagain = input()
