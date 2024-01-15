@@ -1,11 +1,15 @@
-#Created By Jarod L. Cunningham 8-7-2023
-#This is a game called Dragon's Realm. It is written in the python language.
+# Written by Jarod L. Cunningham
+# Python
+# Imports and Character Class
+
 import random
 import time
 import pickle
 
 def display_intro():
-    print('''Welcome to NeverDie, a mystical land of dragons and adventure...''')  # Truncated for brevity
+    print('''Welcome to NeverDie, a mystical land of dragons and adventure. Here, your courage and wit will be tested as you seek the legendary treasure of the dragons.
+          Before you stand two ancient caves: one adorned with mystical runes, suggesting wisdom and magic within; the other surrounded by ominous bones, signaling danger.
+          Will you uncover the secrets of NeverDie and claim the dragons' treasure, or will you fall to the perils that lurk in the shadows? The choice is yours.''')
 
 class Character:
     def __init__(self, name, char_class, strength, intelligence, agility, max_health=100):
@@ -31,13 +35,13 @@ class Character:
         if self.current_health > self.max_health:
             self.current_health = self.max_health
         print(f"{self.name} heals for {amount}! Current health: {self.current_health}/{self.max_health}")
-
+# Character creation
 def create_character():
     print("Character Creation")
     name = input("Enter your character's name: ")
     char_class = choose_class()
     strength, intelligence, agility = distribute_attributes()
-    return Character(name, char_class, strength, intelligence, agility)
+    return Character(name, char_class, strength, intelligence, agility, max_health=100)
 
 def choose_class():
     classes = ["Warrior", "Mage", "Rogue"]
@@ -63,6 +67,7 @@ def distribute_attributes():
         total_points -= points
     return attributes["Strength"], attributes["Intelligence"], attributes["Agility"]
 
+# Game Mechanics (Cave Choice and Dragon Encounter)
 def choose_cave():
     cave = ''
     while cave not in ['1', '2']:
@@ -75,19 +80,39 @@ def check_cave(chosen_cave, character):
     time.sleep(2)
     print('It is dark and spooky...')
     time.sleep(2)
-    print('A Large dragon jumps out in front of you! He opens his jaws and...')
-    print()
-    time.sleep(3)
+    
 
     friendly_cave = random.randint(1, 2)
     if chosen_cave == str(friendly_cave):
         print('The friendly dragon greets you warmly and gives you a large chunk of the treasure!')
     else:
-        print('Silence... The dragon has gobbled you down in one big bite!')
+        print('A large dragon jumps out in front of you! He opens his jaws and...')
+        time.sleep(2)
+        dragon_damage = random.randint(1, 30)
+        character.take_damage(dragon_damage)
+        if character.current_health <= 0:
+            print(f"{character.name} has been defeated by the dragon!")
+            return False  # Indicates the character has been defeated
+        else:
+            print('The dragon raises his right wing in defense of the intruders, reveiling a small door way.You rush past the aggitated dragon toward the doorway managing to escape the dragon, you barely surviving the encounter! .')
+            character.heal(10)
+        # Small health boost after surviving
+        return True  # Indicates the character survived
+    
+# More Encounters   
+def next_encounter(character):
+    print("After surviving the dragon, you venture deeper into the cave...")
+# Placeholder for additional encounters or decision points
+    choice = input("Do you wish to continue deeper into the cave or head back? (continue/back): ")
+    if choice.lower() == "continue":
+        print("You bravely move deeper into the cave...")
+# Additional encounters or events here
+    else:
+        print("You decide to head back, taking the safe route...")
+# Other events or return to the main path
 
-# Placeholder for future implementation
-# def dragon_encounter():
-# Placeholder for future implementation      
+    
+# Save funcion      
 def save_game(character, filename='savegame.pkl'):
     with open(filename, 'wb') as f:
         pickle.dump(character, f)
@@ -118,7 +143,15 @@ def main():
     while play_again.lower() in ['yes', 'y']:
         display_intro()
         cave_number = choose_cave()
-        check_cave(cave_number, player_character)
+        survived = check_cave(cave_number, player_character)
+        if not survived:
+            print('Game Over. Would you like to try again? (yes/no)')
+            play_again = input()
+            if play_again.lower() in ['yes', 'y']:
+                player_character = create_character()  # Create a new character
+            continue
+
+        next_encounter(player_character)
 
         save_choice = input("Do you want to save your game? (yes/no): ")
         if save_choice.lower() in ['yes', 'y']:
