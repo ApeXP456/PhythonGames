@@ -20,6 +20,8 @@ class Character:
         self.agility = agility
         self.max_health = max_health
         self.current_health = max_health
+        self.inventory = ["torch", "sword", "potion", "map"]
+
 
     def __str__(self):
         return f"{self.name}, the {self.char_class} - Strength: {self.strength}, Intelligence: {self.intelligence}, Agility: {self.agility}, Health: {self.current_health}/{self.max_health}"
@@ -35,6 +37,7 @@ class Character:
         if self.current_health > self.max_health:
             self.current_health = self.max_health
         print(f"{self.name} heals for {amount}! Current health: {self.current_health}/{self.max_health}")
+
 # Character creation
 def create_character():
     print("Character Creation")
@@ -68,7 +71,6 @@ def distribute_attributes():
     return attributes["Strength"], attributes["Intelligence"], attributes["Agility"]
 
 # Game Mechanics (Cave Choice and Dragon Encounter)
-
 def encounter(character):
     while True:
         print("What would you like to do?")
@@ -84,11 +86,16 @@ def encounter(character):
             break  # Break the loop to proceed to next part of the game
 
         elif choice == "2":
-            print("You check your inventory and see a torch, a sword, and a map.")
+            print("You check your inventory.")
+            for item in character.inventory:
+                print(item)
             # Additional logic for inventory management can be added here
 
         elif choice == "3":
-            print("You consult your map and see that you are currently in the middle of a cave.")
+            if "map" in character.inventory:
+                print("You consult your map and see that you are currently in the middle of a cave.")
+            else:
+                print("You don't have a map to consult.")
             # Include more details about the player's location or objectives
 
         elif choice == "4":
@@ -97,6 +104,7 @@ def encounter(character):
 
         else:
             print("Invalid input. Please try again.")
+
 
 def choose_cave():
     cave = ''
