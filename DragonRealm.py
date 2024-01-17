@@ -22,7 +22,6 @@ class Character:
         self.current_health = max_health
         self.inventory = ["torch", "sword", "potion", "map"]
 
-
     def __str__(self):
         return f"{self.name}, the {self.char_class} - Strength: {self.strength}, Intelligence: {self.intelligence}, Agility: {self.agility}, Health: {self.current_health}/{self.max_health}"
 
@@ -37,6 +36,28 @@ class Character:
         if self.current_health > self.max_health:
             self.current_health = self.max_health
         print(f"{self.name} heals for {amount}! Current health: {self.current_health}/{self.max_health}")
+
+    def use_potion(self):
+        if "potion" in self.inventory:
+            self.heal(30)  # Amount of health restored by the potion
+            self.inventory.remove("potion")
+            print(f"{self.name} drinks a potion and restores 30 health!")
+        else:
+            print("You don't have any potions.")
+  ##      
+class Dragon:
+    def __init__(self, max_health=100):
+        self.max_health = max_health
+        self.current_health = max_health
+
+    def take_damage(self, damage):
+        self.current_health -= damage
+        if self.current_health < 0:
+            self.current_health = 0
+        print(f"The dragon takes {damage} damage! Current health: {self.current_health}/{self.max_health}")
+
+    def is_alive(self):
+        return self.current_health > 0
 
 # Character creation
 def create_character():
@@ -77,8 +98,9 @@ def encounter(character):
         print("1. Move forward")
         print("2. Check your inventory")
         print("3. Consult your map")
-        print("4. Exit game")
-        choice = input("Enter your choice (1-4): ")
+        print("4. Drink Potion")
+        print("5. Exit game")
+        choice = input("Enter your choice (1-5): ")
 
         if choice == "1":
             print("You cautiously move forward into the darkness...")
@@ -97,8 +119,11 @@ def encounter(character):
             else:
                 print("You don't have a map to consult.")
             # Include more details about the player's location or objectives
-
+        
         elif choice == "4":
+                 character.use_potion()
+
+        elif choice == "5":
             print("Thanks for playing! Exiting game...")
             exit(0)  # Exits the game
 
@@ -112,31 +137,40 @@ def choose_cave():
         print('Which cave will you go into? (1 or 2)')
         cave = input()
     return cave
+ 
+ 
+#character.heal(10)
 
 def check_cave(chosen_cave, character):
     print('You start to approach the cave...')
     time.sleep(2)
     print('It is dark and spooky...')
     time.sleep(2)
-    
 
     friendly_cave = random.randint(1, 2)
     if chosen_cave == str(friendly_cave):
         print('The friendly dragon greets you warmly and gives you a large chunk of the treasure!')
     else:
+        dragon = Dragon()
         print('A large dragon jumps out in front of you! He opens his jaws and...')
         time.sleep(2)
-        dragon_damage = random.randint(1, 30)
-        character.take_damage(dragon_damage)
-        if character.current_health <= 0:
-            print(f"{character.name} has been defeated by the dragon!")
-            return False  # Indicates the character has been defeated
-        else:
-            print('The dragon raises his right wing in defense of the intruders, reveiling a small door way.You rush past the aggitated dragon toward the doorway, you barely surviving the encounter! ')
-            #character.heal(10)
-        # Small health boost after surviving
-        return True  # Indicates the character survived
-  
+        while dragon.is_alive():
+            action = input("Do you want to (a)ttack, use (p)otion, or (r)un? ")
+            if action == "a":
+                dragon.take_damage(character.strength * 5)  # Example damage calculation
+                if dragon.is_alive():
+                    character.take_damage(random.randint(1, 30))
+            elif action == "p":
+                character.use_potion()
+            elif action == "r":
+                print("You decide to run away!")
+                return True
+            if character.current_health <= 0:
+                print(f"{character.name} has been defeated by the dragon!")
+                return False
+        print("You have defeated the dragon!")
+        return
+
 # More Encounters   
 def encounter3(character):
     print("After surviving the dragon, you venture deeper into the cave...")
